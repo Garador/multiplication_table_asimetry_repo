@@ -1,6 +1,11 @@
 <div class="mdl-grid">
 	<div class="mdl-cell mdl-cell--12-col header_title">
-		<h1>Chart Results</h1>
+		<h1>Times-Table Graphics</h1>
+		<hr/>
+	</div>
+	<div class="mdl-cell mdl-cell--8-col mdl-cell-4-col-tablet" id="graphContainer_a">
+		<app-svg-chart #mainSvgChart [multFactor]="multiplierFactor" (generateEmitter)="drewChart($event)"
+		 [canonicPointsAmmount]="pointsAmmount"></app-svg-chart>
 	</div>
 	<div class="mdl-cell mdl-cell--4-col mdl-cell-12-col-phone">
 		<form class="formA">
@@ -44,9 +49,5 @@
 				</tr>
 			</tbody>
 		</table>
-	</div>
-	<div class="mdl-cell mdl-cell--8-col mdl-cell-4-col-tablet" id="graphContainer_a">
-		<app-svg-chart #mainSvgChart [multFactor]="multiplierFactor" (generateEmitter)="drewChart($event)"
-		 [canonicPointsAmmount]="pointsAmmount"></app-svg-chart>
 	</div>
 </div>

@@ -1,3 +1,13 @@
+Changes:
+	[x] Title to "Times-Table Graphics"
+	[x] Title in the left hand corner
+	[x] Move control box to the right side
+	[x] Move SVG circle + lines to the left side
+	[x] Increase size of circle
+	[] Push the numbers to the outside
+
+	[] Dynamic Generation -> Remove "Generate" button // Should be completely autonomous
+
 Algorithm steps:
 	[] We initialize the SVG canvas.
 	[] We calculate the canonic connection points.

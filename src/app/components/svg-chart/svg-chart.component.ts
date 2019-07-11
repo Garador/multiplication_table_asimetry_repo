@@ -74,10 +74,16 @@ export class SvgChartComponent implements OnInit, AfterContentInit {
 		this.drawGraph();
 	}
 
+	/**
+	 * @description Calculates the dimensions for the container
+	 */
 	calculateDimensions(){
-		this._svgContainerDimensionA = $(`#${this._containerId}`).height();
+		this._svgContainerDimensionA = $(`#${this._containerId}`).width();
+		if(this._svgContainerDimensionA > $(window).height()*.80){
+			this._svgContainerDimensionA = $(window).height()*.80;
+		}
 		this._circleDiameter = this._svgContainerDimensionA*0.80;
-		this._correctionFactorPixelsA = this._svgContainerDimensionA*.10;
+		this._correctionFactorPixelsA = this._svgContainerDimensionA*.12;
 		this._correctionFactorPixelsB = 2;
 	}
 
