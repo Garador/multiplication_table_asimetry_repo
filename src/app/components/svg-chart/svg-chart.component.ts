@@ -119,6 +119,43 @@ export class SvgChartComponent implements OnInit, AfterContentInit {
 	public plotLabels(lines:CanonicPoint[]){
 		//element:SVG.Doc, point:JointPoint
 		let labelsMade = [];
+		for(let i=0;i<this._canonicPointsAmmount;i++){
+			let foundLabel = lines.find((point)=>{
+				return point.pointA.label === `${i}`
+			});
+			if(foundLabel){
+				lines[lines.indexOf(foundLabel)].pointA = this._svgHelper.drawLabel(this._svgDoc, foundLabel.pointA);
+			}else{
+				console.log("Not found label: ",i);
+				let degree = this._svgHelper.getDegreeFromPoint(i, this._canonicPointsAmmount);
+				let xy = this._svgHelper.calculateSinglePoint(degree, this._circleDiameter, this._correctionFactorPixelsA);
+				let point:JointPoint = {
+					label: `${i}`,
+					labelObj: null,
+					dot: null,
+					location: {
+						x: xy.X-1,
+						y: xy.Y-1,
+						deg: degree
+					}
+				}
+				point.dot = this._svgHelper.drawDot(this._svgDoc, point);
+				point = this._svgHelper.drawLabel(this._svgDoc, point);
+				console.log(point);
+				labelsMade.push(i);
+			}
+			/*
+			if(
+				lines[i] &&
+				labelsMade.indexOf(lines[i].pointA.label) < 0)
+			{
+					labelsMade.push(lines[i].pointA.label);
+					lines[i].pointA = this._svgHelper.drawLabel(this._svgDoc, lines[i].pointA);
+			}
+			*/
+		}
+		/*
+		let labelsMade = [];
 		for(let i=0;i<lines.length;i++){
 			if(labelsMade.indexOf(lines[i].pointA.label) < 0){
 				if(i == this._canonicPointsAmmount){
@@ -160,5 +197,6 @@ export class SvgChartComponent implements OnInit, AfterContentInit {
 			}
 		}
 		console.log(labelsMade);
+		*/
 	}
 }

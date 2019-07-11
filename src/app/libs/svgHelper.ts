@@ -167,17 +167,23 @@ export class SvgHelper {
 		to be plotted agains the SVG object as canonical points
 	*/
 	getStartingPointCoords(pointsAmmount:number, diameter:number, correctionPixelsA:number):Coords[] {
-		let degreeJump = (360 / pointsAmmount);
 		let builtPoints:Coords[] = [];
-		let order:number = 0;
-		for (let deg = 360; deg > 0; deg -= degreeJump) {
+		for(let i=pointsAmmount;i>0;i--){
+			let deg = this.getDegreeFromPoint(i, pointsAmmount);
 			let point = this.calculateSinglePoint(deg, diameter, correctionPixelsA);
+			if(i == 40 || i == 5){
+				if(i == 5 && deg == 40){
+					//point.Y = 100;
+				}
+				console.log("I: ",i);
+				console.log("Deg: ",deg);
+				console.log("X, Y: ",{point});
+			}
 			builtPoints.push({
 					x: point.X,
 					y: point.Y,
 					deg: deg
 			});
-			order++;
 		}
 		return builtPoints;
 	}
@@ -203,14 +209,17 @@ export class SvgHelper {
 	calculateSinglePoint(deg:number, diameter:number, correctionPixelsA:number) {
 		let offsetLocation = (diameter/2);
 
-		let X = offsetLocation + ((diameter/2) * Math.cos(this.degToRad(deg))) * -1;
+		let X = Math.round(((diameter/2) * Math.cos(this.degToRad(deg))) * -1);
+		X += offsetLocation;
 		X += correctionPixelsA;
-		let Y = (offsetLocation + ((diameter/2) * Math.sin(this.degToRad(deg))));
+
+		let Y = Math.round((diameter/2) * Math.sin(this.degToRad(deg)));
+		Y+=offsetLocation;
 		Y += correctionPixelsA;
+
 		if(deg == 40){
-			console.log({
-				X, Y
-			});
+			console.log(`Edge case(?): ${deg}`);
+			//Y-= offsetLocation+correctionPixelsA+8;
 		}
 		return {
 			X, Y
@@ -231,18 +240,22 @@ export class SvgHelper {
 		//console.log({ pointsAmmount, multFactor, diameter, correctionPixelsA });
 		let plotResult:CanonicPoint[] = [];
 		let startPoints = this.getStartingPointCoords(pointsAmmount, diameter, correctionPixelsA);
-		//console.log({startPoints});
 
 		for (let i = 0; i < startPoints.length; i++) {
-			let spinFactor = 1;		//How many spins it gives
+			let spinFactor = 1;		//How many spins it gave
 			
-			let plotPointNumber = Math.floor((multFactor * i));	//TODO Work with decimals
+			let plotPointNumber = Math.floor((multFactor * i));	//Number to plot, rounding to closest decimal
 			
 			if (plotPointNumber > pointsAmmount) {
-				spinFactor = Math.floor(plotPointNumber / pointsAmmount);
-				plotPointNumber -= (spinFactor * pointsAmmount);
+				spinFactor = Math.floor(plotPointNumber / pointsAmmount);	//Spins given
+				plotPointNumber -= (spinFactor * pointsAmmount);			//The point to plot against the graph
 			} else if (plotPointNumber == pointsAmmount) {
+				//The same as 0
 				continue;
+			}
+
+			if(i == 40){
+				console.log();
 			}
 
 			let pointA:JointPoint = {
@@ -254,10 +267,12 @@ export class SvgHelper {
 
 
 
-			let pointB_coords = this.calculateSinglePoint(startPoints[plotPointNumber].deg, diameter, correctionPixelsA)
-			let labelB = parseInt((startPoints[plotPointNumber].deg/(360/pointsAmmount)).toFixed(2));
+			let pointB_coords = this
+				.calculateSinglePoint(startPoints[plotPointNumber].deg, diameter, correctionPixelsA);
+			//let labelB = parseInt((startPoints[plotPointNumber].deg/(360/pointsAmmount)).toFixed(2));
+			//let labelB = this.getDegreeFromPoint(startPoints[plotPointNumber].deg, startPoints.length);
 			let pointB:JointPoint = {
-				label:`${labelB}`,
+				label:``,
 				dot:null,
 				location: {
 					x: pointB_coords.X,
