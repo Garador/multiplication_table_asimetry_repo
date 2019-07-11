@@ -1,0 +1,6 @@
+Algorithm steps:
+	[] We initialize the SVG canvas.
+	[] We calculate the canonic connection points.
+	We plot the points on the canvas:
+		[] We draw the collection of points
+		[] We generate the lines for those points.
