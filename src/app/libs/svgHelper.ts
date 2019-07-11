@@ -227,6 +227,24 @@ export class SvgHelper {
 	}
 
 	/**
+	 * @description Gets coordiantes X, Y point from center
+	 * @param distance Distance from center
+	 */
+	public plotPointFromCenter(deg:number, diameter:number, distance:number, cy:number, cx:number){
+		diameter+= distance;
+
+		let X = Math.round(((diameter/2) * Math.cos(this.degToRad(deg))) * -1);
+		X+=cx;
+
+		let Y = Math.round((diameter/2) * Math.sin(this.degToRad(deg)));
+		Y+=cy;
+
+		return {
+			X, Y
+		};
+	}
+
+	/**
 	 * @description Calculates start and end points for lines.
 	 * @param pointsAmmount Ammounts of canonical points to calculate
 	 * @param multFactor Multiplication factor provided on UI
@@ -352,11 +370,14 @@ export class SvgHelper {
 	 * @param element Element to draw the label into
 	 * @param point The point to get the coordinates
 	 */
-	drawLabel(element:SVG.Doc, point:JointPoint):JointPoint{
+	drawLabel(element:SVG.Doc, circle: SVG.Circle, point:JointPoint):JointPoint{
 		point.labelObj =  element.text(`${point.label}`)
 		.fill('black')
 		.font({'weight':'bold'})
 		.move(point.location.x+5, point.location.y);
+		let pointFromC = this.plotPointFromCenter(point.location.deg, circle.width(), 20, circle.cx(), circle.cy());
+		point.labelObj.center(pointFromC.X, pointFromC.Y);
+		//point.labelObj.move(pointFromC.X-5, pointFromC.Y-5);
 		return point;
 	}
 

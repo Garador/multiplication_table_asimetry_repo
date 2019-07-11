@@ -97,10 +97,9 @@ export class SvgChartComponent implements OnInit, AfterContentInit {
 		}
 		this._svgHelper.initialize(this._containerId);
 		this.calculateDimensions();
-		this._canonicPoints = this.plotLines();
 		this._svgCircle = this.plotCircle();
+		this._canonicPoints = this.plotLines();
 		this.plotLabels(this._canonicPoints);
-
 		this._resultEmitter.emit({points:this._canonicPoints})
 	}
 
@@ -129,10 +128,23 @@ export class SvgChartComponent implements OnInit, AfterContentInit {
 			let foundLabel = lines.find((point)=>{
 				return point.pointA.label === `${i}`
 			});
+
+			/*
+			this._svgDoc.circle(30)
+			.move(this._svgCircle.cx(), this._svgCircle.cy())
+			.fill('red')
+			.width(5);
+			*/
+
 			if(foundLabel){
-				lines[lines.indexOf(foundLabel)].pointA = this._svgHelper.drawLabel(this._svgDoc, foundLabel.pointA);
+				lines[lines.indexOf(foundLabel)].pointA = this._svgHelper.drawLabel(this._svgDoc, this._svgCircle, foundLabel.pointA);
+
+				console.log({
+					label: `${lines[lines.indexOf(foundLabel)].pointA.label}`,
+					i: i,
+					deg: lines[lines.indexOf(foundLabel)].pointA.location.deg
+				});
 			}else{
-				console.log("Not found label: ",i);
 				let degree = this._svgHelper.getDegreeFromPoint(i, this._canonicPointsAmmount);
 				let xy = this._svgHelper.calculateSinglePoint(degree, this._circleDiameter, this._correctionFactorPixelsA);
 				let point:JointPoint = {
@@ -145,9 +157,9 @@ export class SvgChartComponent implements OnInit, AfterContentInit {
 						deg: degree
 					}
 				}
+				
 				point.dot = this._svgHelper.drawDot(this._svgDoc, point);
-				point = this._svgHelper.drawLabel(this._svgDoc, point);
-				console.log(point);
+				point = this._svgHelper.drawLabel(this._svgDoc, this._svgCircle, point);
 				labelsMade.push(i);
 			}
 			/*
