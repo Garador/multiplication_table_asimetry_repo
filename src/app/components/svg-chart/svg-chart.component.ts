@@ -124,6 +124,7 @@ export class SvgChartComponent implements OnInit, AfterContentInit {
 				if(i == this._canonicPointsAmmount){
 					continue;
 				}
+				console.log("Plotting: ",lines[i].pointA.label);
 				lines[i].pointA = this._svgHelper.drawLabel(this._svgDoc, lines[i].pointA);
 				labelsMade.push(lines[i].pointA.label);
 			}
